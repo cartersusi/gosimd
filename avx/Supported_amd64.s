@@ -2,15 +2,15 @@
 
 // func Supported() bool
 TEXT ·Supported(SB), 4, $0
-    //Check XSAVE supported.
+    //XSAVE supported.
     MOVQ    $1, AX
     CPUID
     TESTQ   $(1<<26), CX
     JZ      avxFalse
-    //Check AVX supported.
+    //AVX supported.
     TESTQ   $(1<<28), CX
     JZ      avxFalse
-    //Check XMM and YMM enabled.
+    //XMM and YMM enabled.
     MOVQ    $0, CX
     XGETBV
     TESTQ   $(1<<1), AX
