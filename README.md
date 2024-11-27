@@ -2,7 +2,7 @@
 
 ## Import
 ```sh
-go get github.com/cartersusi/gosimd/avx
+go get github.com/cartersusi/gosimd
 ```
 ```go
 import "github.com/cartersusi/gosimd/avx"
