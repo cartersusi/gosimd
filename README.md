@@ -26,7 +26,7 @@ func main() {
 		v2[i] = rand.Float32()
 	}
 
-	var res float32 = 0
+	var res float32
 	simd.DotProduct(v1, v2, res)
 	
 	fmt.Println(res)
