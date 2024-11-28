@@ -2,9 +2,7 @@
 
 package gosimd
 
-import (
-	"github.com/cartersusi/gosimd/avx"
-)
+import "github.com/cartersusi/gosimd/avx"
 
 func getSimdImplementation() simdInterface {
 	return &avxImplementation{}
@@ -13,7 +11,6 @@ func getSimdImplementation() simdInterface {
 type avxImplementation struct{}
 
 func (a *avxImplementation) dotProduct(left, right []float32, result *float32) {
-	// TODO adjust result param
 	if avx.Supported() {
 		res := avx.DotProduct(left, right, *result)
 		*result = res

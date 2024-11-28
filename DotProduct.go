@@ -24,14 +24,16 @@ func DotProduct(left, right []float32, result *float32) {
 	if len(left) != len(right) {
 		panic("vectors must be the same length")
 	}
-	getSimdImplementation().dotProduct(left, right, result)
-}
 
-func dotProduct(left, right []float32, result *float32) {
 	if len(left) < small {
 		dotProduct_unroll(left, right, result)
 		return
 	}
+
+	getSimdImplementation().dotProduct(left, right, result)
+}
+
+func dotProduct(left, right []float32, result *float32) {
 	dotProduct_np(left, right, result)
 }
 
