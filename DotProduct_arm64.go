@@ -8,6 +8,6 @@ func getSimdImplementation() SimdInterface {
 
 type FallbackImplementation struct{}
 
-func (f *FallbackImplementation) _DotProduct(left, right []float32, result float32) float32 {
-	return _DotProduct(left, right, result)
+func (f *FallbackImplementation) _DotProduct(left, right []float32, result *float32) {
+	_DotProduct(left, right, result)
 }

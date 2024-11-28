@@ -12,10 +12,13 @@ func getSimdImplementation() SimdInterface {
 
 type AvxImplementation struct{}
 
-func (a *AvxImplementation) _DotProduct(left, right []float32, result float32) float32 {
+func (a *AvxImplementation) _DotProduct(left, right []float32, result *float32) {
+	// TODO adjust result param
 	if avx.Supported() {
-		return avx.DotProduct(left, right, result)
+		res := avx.DotProduct(left, right, *result)
+		*result = res
+		return
 	}
 
-	return _DotProduct(left, right, result)
+	_DotProduct(left, right, result)
 }

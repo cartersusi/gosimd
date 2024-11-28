@@ -6,7 +6,7 @@ import (
 )
 
 type SimdInterface interface {
-	_DotProduct(left, right []float32, result float32) float32
+	_DotProduct(left, right []float32, result *float32)
 }
 
 // DotProduct calculates the dot product of two vectors using NEON or AVX SIMD
@@ -20,21 +20,23 @@ type SimdInterface interface {
 //
 // Returns:
 //   - the dot product of the two vectors
-func DotProduct(left, right []float32, result float32) float32 {
-	if len(left) != len(right) {
+func DotProduct(left, right []float32, result *float32) {
+	getSimdImplementation()._DotProduct(left, right, result)
+}
+
+func _DotProduct(v1, v2 []float32, result *float32) {
+	if len(v1) != len(v2) {
 		panic("vectors must be the same length")
 	}
-	return getSimdImplementation()._DotProduct(left, right, result)
-}
 
-func _DotProduct(left, right []float32, result float32) float32 {
-	if len(left) < SMALL {
-		return std_dot_product(left, right, result)
+	if len(v1) < SMALL {
+		std_dot_product(v1, v2, result)
+		return
 	}
-	return np_dot_product(left, right, result)
+	np_dot_product(v1, v2, result)
 }
 
-func np_dot_product(left, right []float32, result float32) float32 {
+func np_dot_product(left, right []float32, result *float32) {
 	n := len(left)
 
 	n_cpu := runtime.GOMAXPROCS(0)
@@ -95,35 +97,31 @@ func np_dot_product(left, right []float32, result float32) float32 {
 	wg.Wait()
 
 	for _, sum := range ps {
-		result += sum
+		*result += sum
 	}
-
-	return result
 }
 
-func std_dot_product(left, right []float32, result float32) float32 {
+func std_dot_product(left, right []float32, result *float32) {
 	for i := 0; i < len(left)-15; i += 16 {
-		result += left[i] * right[i]
-		result += left[i+1] * right[i+1]
-		result += left[i+2] * right[i+2]
-		result += left[i+3] * right[i+3]
-		result += left[i+4] * right[i+4]
-		result += left[i+5] * right[i+5]
-		result += left[i+6] * right[i+6]
-		result += left[i+7] * right[i+7]
-		result += left[i+8] * right[i+8]
-		result += left[i+9] * right[i+9]
-		result += left[i+10] * right[i+10]
-		result += left[i+11] * right[i+11]
-		result += left[i+12] * right[i+12]
-		result += left[i+13] * right[i+13]
-		result += left[i+14] * right[i+14]
-		result += left[i+15] * right[i+15]
+		*result += left[i] * right[i]
+		*result += left[i+1] * right[i+1]
+		*result += left[i+2] * right[i+2]
+		*result += left[i+3] * right[i+3]
+		*result += left[i+4] * right[i+4]
+		*result += left[i+5] * right[i+5]
+		*result += left[i+6] * right[i+6]
+		*result += left[i+7] * right[i+7]
+		*result += left[i+8] * right[i+8]
+		*result += left[i+9] * right[i+9]
+		*result += left[i+10] * right[i+10]
+		*result += left[i+11] * right[i+11]
+		*result += left[i+12] * right[i+12]
+		*result += left[i+13] * right[i+13]
+		*result += left[i+14] * right[i+14]
+		*result += left[i+15] * right[i+15]
 	}
 
 	for i := len(left) - (len(left) % 16); i < len(left); i++ {
-		result += left[i] * right[i]
+		*result += left[i] * right[i]
 	}
-
-	return result
 }
