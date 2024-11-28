@@ -1,21 +1,34 @@
 
 
-## Import
-```sh
+```bash
 go get github.com/cartersusi/gosimd
-```
-```go
-import "github.com/cartersusi/gosimd/avx"
 ```
 
 ## Usage 
-`DotProduct_amd64.go`
+`main.go`
 ```go
-import "github.com/cartersusi/gosimd/avx"
-func DotProduct(left, right []float32, result float32) (float32, error) {
-	if avx.Supported() {
-		return avx.DotProduct(left, right, result)
+package main
+
+import (
+	"fmt"
+	"math/rand"
+
+	simd "github.com/cartersusi/gosimd"
+)
+
+func main() {
+	n := 200000
+	v1 := make([]float32, n)
+	v2 := make([]float32, n)
+
+	for i := 0; i < n; i++ {
+		v1[i] = rand.Float32()
+		v2[i] = rand.Float32()
 	}
-    return errors.New("AVX not supported")
+
+	var res float32 = 0
+	simd.DotProduct(v1, v2, res)
+	
+	fmt.Println(res)
 }
 ```
