@@ -5,8 +5,8 @@ import (
 	"sync"
 )
 
-type SimdInterface interface {
-	_DotProduct(left, right []float32, result *float32)
+type simdInterface interface {
+	dotProduct(left, right []float32, result *float32)
 }
 
 // DotProduct calculates the dot product of two vectors using NEON or AVX SIMD
@@ -21,22 +21,21 @@ type SimdInterface interface {
 // Returns:
 //   - the dot product of the two vectors
 func DotProduct(left, right []float32, result *float32) {
-	getSimdImplementation()._DotProduct(left, right, result)
-}
-
-func _DotProduct(v1, v2 []float32, result *float32) {
-	if len(v1) != len(v2) {
+	if len(left) != len(right) {
 		panic("vectors must be the same length")
 	}
-
-	if len(v1) < SMALL {
-		std_dot_product(v1, v2, result)
-		return
-	}
-	np_dot_product(v1, v2, result)
+	getSimdImplementation().dotProduct(left, right, result)
 }
 
-func np_dot_product(left, right []float32, result *float32) {
+func dotProduct(left, right []float32, result *float32) {
+	if len(left) < small {
+		dotProduct_unroll(left, right, result)
+		return
+	}
+	dotProduct_np(left, right, result)
+}
+
+func dotProduct_np(left, right []float32, result *float32) {
 	n := len(left)
 
 	n_cpu := runtime.GOMAXPROCS(0)
@@ -101,7 +100,7 @@ func np_dot_product(left, right []float32, result *float32) {
 	}
 }
 
-func std_dot_product(left, right []float32, result *float32) {
+func dotProduct_unroll(left, right []float32, result *float32) {
 	for i := 0; i < len(left)-15; i += 16 {
 		*result += left[i] * right[i]
 		*result += left[i+1] * right[i+1]

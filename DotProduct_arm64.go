@@ -2,12 +2,12 @@
 
 package gosimd
 
-func getSimdImplementation() SimdInterface {
-	return &FallbackImplementation{}
+func getSimdImplementation() simdInterface {
+	return &fallbackImplementation{}
 }
 
-type FallbackImplementation struct{}
+type fallbackImplementation struct{}
 
-func (f *FallbackImplementation) _DotProduct(left, right []float32, result *float32) {
-	_DotProduct(left, right, result)
+func (f *fallbackImplementation) dotProduct(left, right []float32, result *float32) {
+	dotProduct(left, right, result)
 }

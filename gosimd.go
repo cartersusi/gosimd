@@ -3,13 +3,13 @@ package gosimd
 import "runtime"
 
 const (
-	SMALL = 65536   //1 << 16
-	MED   = 262144  //1 << 18
-	LARGE = 1048576 //1 << 20
+	small = 65536   //1 << 16
+	med   = 262144  //1 << 18
+	large = 1048576 //1 << 20
 
-	OuterBlockSize = 32
-	InnerBlockSize = 16
-	CacheLineSize  = 64
+	outer_block_size = 32
+	inner_block_size = 16
+	cache_line_size  = 64
 )
 
 func getOptimalChunkSize(vectorSize int) int {
