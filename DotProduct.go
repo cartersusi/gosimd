@@ -21,18 +21,17 @@ type SimdInterface interface {
 // Returns:
 //   - the dot product of the two vectors
 func DotProduct(left, right []float32, result float32) float32 {
+	if len(left) != len(right) {
+		panic("vectors must be the same length")
+	}
 	return getSimdImplementation()._DotProduct(left, right, result)
 }
 
-func _DotProduct(v1, v2 []float32, result float32) float32 {
-	if len(v1) != len(v2) {
-		panic("vectors must be the same length")
+func _DotProduct(left, right []float32, result float32) float32 {
+	if len(left) < SMALL {
+		return std_dot_product(left, right, result)
 	}
-
-	if len(v1) < SMALL {
-		return std_dot_product(v1, v2, result)
-	}
-	return np_dot_product(v1, v2, result)
+	return np_dot_product(left, right, result)
 }
 
 func np_dot_product(left, right []float32, result float32) float32 {
