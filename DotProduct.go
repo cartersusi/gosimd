@@ -7,6 +7,7 @@ import (
 
 type simdInterface interface {
 	dotProduct(left, right []float32, result *float32)
+	supported() bool
 }
 
 // DotProduct calculates the dot product of two vectors using NEON or AVX SIMD
@@ -31,6 +32,10 @@ func DotProduct(left, right []float32, result *float32) {
 	}
 
 	getSimdImplementation().dotProduct(left, right, result)
+}
+
+func Supported() bool {
+	return getSimdImplementation().supported()
 }
 
 func dotProduct(left, right []float32, result *float32) {

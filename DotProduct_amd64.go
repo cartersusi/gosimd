@@ -19,3 +19,7 @@ func (a *avxImplementation) dotProduct(left, right []float32, result *float32) {
 
 	dotProduct(left, right, result)
 }
+
+func (a *avxImplementation) supported() bool {
+	return avx.Supported()
+}

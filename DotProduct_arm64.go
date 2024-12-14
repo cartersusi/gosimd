@@ -18,3 +18,7 @@ func (f *fallbackImplementation) dotProduct(left, right []float32, result *float
 	}
 	dotProduct(left, right, result)
 }
+
+func (f *fallbackImplementation) supported() bool {
+	return neon.Supported()
+}
